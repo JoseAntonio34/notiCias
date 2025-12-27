@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notícias Hoje Avançado</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: Arial, sans-serif; background:#f4f7fa; color:#333; }
+  
+  /* HEADER */
+  header {
+    background:#007bff;
+    color:white;
+    padding:20px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  nav {
+    display:flex;
+    justify-content:center;
+    background:#0056b3;
+  }
+
+  nav a {
+    color:white;
+    padding:15px 20px;
+    text-decoration:none;
+    transition: background 0.3s;
+  }
+
+  nav a:hover { background:#004080; }
+
+  /* SLIDESHOW */
+  .slideshow-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .slide {
+    display: none;
+    width: 100%;
+  }
+
+  .slide img {
+    width:100%;
+    display:block;
+  }
+
+  .slide h2 {
+    position:absolute;
+    bottom:20px;
+    left:20px;
+    color:white;
+    background:rgba(0,0,0,0.5);
+    padding:10px 15px;
+    border-radius:6px;
+  }
+
+  /* CONTAINER */
+  .container { max-width:1000px; margin:20px auto; padding:0 20px; }
+
+  .filtro { text-align:center; margin-bottom:20px; }
+  .filtro button {
+    padding:10px 20px; margin:0 5px; border:none; border-radius:6px;
+    background:#007bff; color:white; cursor:pointer; transition:0.3s;
+  }
+  .filtro button:hover { background:#0056b3; }
+
+  /* CARDS */
+  .noticias { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+  .card {
+    background:white;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    width:300px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  .card img { width:100%; height:180px; object-fit:cover; }
+  .card-content { padding:15px; flex:1; display:flex; flex-direction:column; }
+  .card-content h3 { margin-bottom:10px; color:#007bff; }
+  .card-content p { flex:1; font-size:14px; margin-bottom:10px; }
+  .card-content button {
+    padding:8px 15px; border:none; border-radius:6px;
+    background:#28a745; color:white; cursor:pointer;
+  }
+  .card-content button:hover { background:#1e7e34; }
+
+  /* MODAL */
+  .modal {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
+  }
+
+  .modal-content {
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    max-width:600px;
+    width:90%;
+    max-height:80%;
+    overflow-y:auto;
+    position:relative;
+  }
+
+  .close-btn {
+    position:absolute;
+    top:10px; right:15px;
+    font-size:25px;
+    font-weight:bold;
+    color:#333;
+    cursor:pointer;
+  }
+
+  footer {
+    background:#333;
+    color:white;
+    text-align:center;
+    padding:20px 0;
+    margin-top:20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Notícias Hoje</h1>
+</header>
+
+<nav>
+  <a href="#slideshow">Destaques</a>
+  <a href="#noticias">Notícias</a>
+  <a href="#filtro">Categorias</a>
+</nav>
+
+<!-- SLIDESHOW -->
+<div class="slideshow-container" id="slideshow">
+  <div class="slide">
+    <img src="https://source.unsplash.com/1000x400/?politics" alt="Política">
+    <h2>Notícia em destaque: Política</h2>
+  </div>
+  <div class="slide">
+    <img src="https://source.unsplash.com/1000x400/?sports" alt="Esportes">
+    <h2>Notícia em destaque: Esportes</h2>
+  </div>
+  <div class="slide">
+    <img src="https://source.unsplash.com/1000x400/?technology" alt="Tecnologia">
+    <h2>Notícia em destaque: Tecnologia</h2>
+  </div>
+</div>
+
+<div class="container">
+  <div class="filtro" id="filtro">
+    <button onclick="filtrar('todas')">Todas</button>
+    <button onclick="filtrar('politica')">Política</button>
+    <button onclick="filtrar('esportes')">Esportes</button>
+    <button onclick="filtrar('tecnologia')">Tecnologia</button>
+  </div>
+
+  <div class="noticias" id="noticias">
+    <div class="card" data-categoria="politica">
+      <img src="https://source.unsplash.com/300x180/?politics" alt="">
+      <div class="card-content">
+        <h3>Política Nacional</h3>
+        <p>Resumo das decisões governamentais e impactos na sociedade.</p>
+        <button onclick="abrirModal('Notícia completa sobre Política Nacional...')">Ler mais</button>
+      </div>
+    </div>
+
+    <div class="card" data-categoria="esportes">
+      <img src="https://source.unsplash.com/300x180/?sports" alt="">
+      <div class="card-content">
+        <h3>Resultados dos Campeonatos</h3>
+        <p>Confira os resultados e análises dos principais jogos recentes.</p>
+        <button onclick="abrirModal('Notícia completa sobre Esportes...')">Ler mais</button>
+      </div>
+    </div>
+
+    <div class="card" data-categoria="tecnologia">
+      <img src="https://source.unsplash.com/300x180/?technology" alt="">
+      <div class="card-content">
+        <h3>Lançamentos de Gadgets</h3>
+        <p>Novidades em tecnologia, gadgets e inovações.</p>
+        <button onclick="abrirModal('Notícia completa sobre Tecnologia...')">Ler mais</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="fecharModal()">&times;</span>
+    <p id="modal-text"></p>
+  </div>
+</div>
+
+<footer>
+  <p>Notícias Hoje © 2025</p>
+</footer>
+
+<script>
+  // FILTRO DE CATEGORIA
+  function filtrar(categoria) {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      if(categoria === 'todas' || card.dataset.categoria === categoria){
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // MODAL
+  function abrirModal(texto) {
+    document.getElementById('modal-text').textContent = texto;
+    document.getElementById('modal').style.display = 'flex';
+  }
+  function fecharModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  // SLIDESHOW
+  let slideIndex = 0;
+  function showSlides() {
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach(s => s.style.display = 'none');
+    slideIndex++;
+    if(slideIndex > slides.length) { slideIndex = 1; }
+    slides[slideIndex-1].style.display = 'block';
+    setTimeout(showSlides, 4000);
+  }
+  showSlides();
+</script>
+
+</body>
+</html>
